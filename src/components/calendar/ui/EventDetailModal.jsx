@@ -20,6 +20,15 @@ const EventDetailModal = ({ isOpen, onClose, eventData, onUpdate, onDelete }) =>
     }, [eventData]);
 
     const handleSave = async () => {
+        // 날짜 비교
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (end < start) {
+            alert("종료 날짜는 시작 날짜보다 앞에 있어야 합니다.");
+            return;
+        }
+
         try {
             const updatedEvent = {
                 ...eventData,
