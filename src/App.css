@@ -2,4 +2,39 @@
   text-align: center;
 }
 
+#Calendar {
+  width: 1000px;
+  margin: 40px auto;
+}
+
+.fc .fc-day-sun a {
+  color: red;
+}
+
+.fc .fc-day-sat a {
+  color: blue;
+}
+
+.fc .fc-toolbar-title {
+  font-weight: normal;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin: 0;
+  padding: 0 40px;
+  background-color: rgba(95, 129, 152, 0.87);
+  height: 80px;
+
+  font-size: 12px;
+  line-height: 30px;
+  color: white;
+  border-radius: 20px 20px 0px 0px;
+}
+
+.fc .fc-toolbar-chunk .fc-button {
+  background-color: transparent;
+  border: none;
+  font-size: 12px;
+}
+
 
