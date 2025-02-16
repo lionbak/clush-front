@@ -6,16 +6,33 @@ import EventAddModal from "./EventAddModal";
 import interactionPlugin from '@fullcalendar/interaction';
 import EventDetailModal from "./EventDetailModal";
 import useEventHandler from "../hooks/useEventHandler";
-
+import useQrEventHandler from "../../share/hooks/useQrEventHandler";
+import QrExportModal from "../../share/ui/QrExportModal";
+import QrImportModal from "../../share/ui/QrImportModal";
 
 const Calendar = () => {
     const calendarHook = useEventHandler(useEventsList);
+    const shareQrHook = useQrEventHandler()
 
     return (
         <div id="Calendar">
             <FullCalendar
                 initialView="dayGridMonth"
                 plugins={[dayGridPlugin, interactionPlugin]}
+                customButtons={{
+                    shareButton1: {
+                        text: '일정 내보내기',
+                        click: shareQrHook.openExportModal
+                    },
+                    shareButton2: {
+                        text: '일정 가져오기',
+                        click: shareQrHook.openImportModal
+                    }
+                }}
+                headerToolbar={{
+                    left: 'title',
+                    right: 'shareButton1, shareButton2, today, prev, next'
+                }}
                 locale="ko"
                 events={calendarHook.getAllEvents}
                 eventClick={calendarHook.handleEventClick}
@@ -47,6 +64,14 @@ const Calendar = () => {
                 eventData={calendarHook.selectedEvent}
                 onUpdate={calendarHook.updateEventInCalendar}
                 onDelete={calendarHook.deleteEventInCalendar}
+            />
+            <QrExportModal
+                isOpen={shareQrHook.isQrModalOpen}
+                onClose={shareQrHook.closeExportModal}
+            />
+            <QrImportModal
+                isOpen={shareQrHook.isImportModalOpen}
+                onClose={shareQrHook.closeImportModal}  // 모달 닫기
             />
         </div>
     );
