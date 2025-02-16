@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import { formatInTimeZone } from 'date-fns-tz';
+import {useState} from 'react';
+import {formatInTimeZone} from 'date-fns-tz';
+import {getEvent} from '../api/CalendarGetEvent';
 
 const useEventHandler = (useEventsList) => {
     const { getAllEvents, fetchEvents, addEvent } = useEventsList();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
     const dayChangeHandle = (arg) => {
-        const dayNumber = arg.dayNumberText.replace("일", "");
-        return dayNumber;
+        return arg.dayNumberText.replace("일", "");
     };
 
     const handleDateSelect = (selectInfo) => {
@@ -16,7 +18,6 @@ const useEventHandler = (useEventsList) => {
         const formattedDate = formatInTimeZone(selectedDate, 'Asia/Seoul', 'yyyy-MM-dd') + "T00:00";
         setSelectedDate(formattedDate);
         setIsModalOpen(true);
-
     };
 
     const closeModal = () => {
@@ -29,10 +30,35 @@ const useEventHandler = (useEventsList) => {
         setIsModalOpen(false);
     };
 
+    const handleEventClick = async (clickInfo) => {
+        try {
+            const eventId = clickInfo.event.id;
+            const eventData = await getEvent(eventId);
+            setSelectedEvent(eventData);
+            setIsDetailModalOpen(true);
+        } catch (error) {
+            console.error("단일 이벤트 가져오기 실패:", error);
+        }
+    };
+
+    const closeDetailModal = () => {
+        setIsDetailModalOpen(false);
+    };
+
+    const updateEventInCalendar = async () => {
+        await fetchEvents();
+    };
+
+    const deleteEventInCalendar = async () => {
+        await fetchEvents();
+    };
+
     return {
         // states
         isModalOpen,
         selectedDate,
+        isDetailModalOpen,
+        selectedEvent,
         getAllEvents,
 
         // handlers
@@ -40,6 +66,10 @@ const useEventHandler = (useEventsList) => {
         handleDateSelect,
         closeModal,
         handleAddEvent,
+        handleEventClick,
+        closeDetailModal,
+        updateEventInCalendar,
+        deleteEventInCalendar
     };
 };
 
